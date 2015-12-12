@@ -104,7 +104,7 @@ Delete an order
 Null or error info
 
 ## TODO
-- [ ] i18n
+- [x] i18n
 - [ ] Admin dashboard
 - [x] Frontend redirecting
 - [ ] Backenden notification

@@ -16,27 +16,27 @@
             <h3 class="text-muted">E-cash</h3>
         </div>
         <div class="jumbotron" id="order">
-            <h2>Order details</h2>
+            <h2>***REMOVED******REMOVED***trans('message.order_details')***REMOVED******REMOVED***</h2>
             <p class="lead"></p>
             <div class="panel panel-default">
                 <div class="panel-heading">***REMOVED******REMOVED***$order['subject']***REMOVED******REMOVED***</div>
                 <table class="table table-hover">
                     <tbody>
                         <tr>
-                            <th>Merchandiser</th>
+                            <th>***REMOVED******REMOVED***trans('message.merchandiser')***REMOVED******REMOVED***</th>
                             <td>***REMOVED******REMOVED***$order['merchandiser']['name']***REMOVED******REMOVED***</td>
                         </tr>
                         <tr>
-                            <th>Order ID</th>
+                            <th>***REMOVED******REMOVED***trans('message.order_id')***REMOVED******REMOVED***</th>
                             <td>***REMOVED******REMOVED***$order['id']***REMOVED******REMOVED***</td>
                         </tr>
                         <tr>
-                            <th>Amount</th>
+                            <th>***REMOVED******REMOVED***trans('message.amount')***REMOVED******REMOVED***</th>
                             <td>***REMOVED******REMOVED***$order['amount']***REMOVED******REMOVED***</td>
                         </tr>
                         <tr>
-                            <th>Status</th>
-                            <td>***REMOVED******REMOVED***$order['status']***REMOVED******REMOVED***</td>
+                            <th>***REMOVED******REMOVED***trans('message.status')***REMOVED******REMOVED***</th>
+                            <td>***REMOVED******REMOVED***trans('message.status_' . $order['status'])***REMOVED******REMOVED***</td>
                         </tr>
                     </tbody>
                 </table>
@@ -58,14 +58,14 @@
                         <input type="radio" name="gateway" value="paypal" id="paypal" autocomplete="off"> Paypal
                     </label>
                 </div>
-                <button type="submit" class="btn btn-success btn-block">Pay now</button>
+                <button type="submit" class="btn btn-success btn-block">***REMOVED******REMOVED***trans('message.pay_now')***REMOVED******REMOVED***</button>
             </form>
             @else
-            <a href="***REMOVED******REMOVED***$order['returnUrl']***REMOVED******REMOVED***?id=***REMOVED******REMOVED***$order['id']***REMOVED******REMOVED***&trade_no=***REMOVED******REMOVED***$order['trade_no']***REMOVED******REMOVED***" class="btn btn-default btn-block" role="button">Redirecting...</a>
+            <a href="***REMOVED******REMOVED***$order['returnUrl']***REMOVED******REMOVED***?id=***REMOVED******REMOVED***$order['id']***REMOVED******REMOVED***&trade_no=***REMOVED******REMOVED***$order['trade_no']***REMOVED******REMOVED***" class="btn btn-default btn-block" role="button">***REMOVED******REMOVED***trans('message.redirecting')***REMOVED******REMOVED***</a>
             @endif
         </div>
         <div class="footer">
-            <p>&hearts; <a href="https://github.com/labs7in0/E-cash">E-cash</a> is a payment gateway system developed by <a href="https://7in0.me/">7IN0's Labs</a>, it provides a serial APIs upon <a href="https://github.com/thephpleague/omnipay">omnipay</a>.</p>
+            <p>&hearts; ***REMOVED***!! trans('message.hearts') !!***REMOVED***.</p>
             <p>&copy; <a href="https://7in0.me/">7IN0's Labs</a>.</p>
         </div>
     </div>

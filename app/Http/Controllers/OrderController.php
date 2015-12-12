@@ -81,7 +81,7 @@ class OrderController extends Controller
                     $order->gateway = $gateway;
                     $this->js($response->getRedirectUrl()***REMOVED***
                 ***REMOVED*** else ***REMOVED***
-                    exit('Faild when processing your order.'***REMOVED***
+                    exit(trans('message.faild_processing')***REMOVED***
                 ***REMOVED***
                 break;
             case 'paypal':
@@ -112,7 +112,7 @@ class OrderController extends Controller
                     $order->gateway = $gateway;
                     $this->js($response->getRedirectUrl()***REMOVED***
                 ***REMOVED*** else ***REMOVED***
-                    exit('Faild when processing your order.'***REMOVED***
+                    exit(trans('message.faild_processing')***REMOVED***
                 ***REMOVED***
                 break;
             case 'unionpay':
@@ -137,7 +137,7 @@ class OrderController extends Controller
                     $order->gateway = $gateway;
                     $response->redirect(***REMOVED***
                 ***REMOVED*** else ***REMOVED***
-                    exit('Faild when processing your order.'***REMOVED***
+                    exit(trans('message.faild_processing')***REMOVED***
                 ***REMOVED***
                 break;
             case 'wechat':
@@ -166,11 +166,11 @@ class OrderController extends Controller
                         ->setPadding(0)
                         ->getDataUri(***REMOVED***
                 ***REMOVED*** else ***REMOVED***
-                    exit('Faild when processing your order.'***REMOVED***
+                    exit(trans('message.faild_processing')***REMOVED***
                 ***REMOVED***
                 break;
             default:
-                exit('Unsupported gateway!'***REMOVED***
+                exit(trans('message.unsupported_gateway')***REMOVED***
         ***REMOVED***
 
         $order->save(***REMOVED***
@@ -307,7 +307,7 @@ class OrderController extends Controller
                 ***REMOVED***
                 break;
             default:
-                exit('Unsupported gateway!'***REMOVED***
+                exit(trans('message.unsupported_gateway')***REMOVED***
         ***REMOVED***
 
         $order->save(***REMOVED***
