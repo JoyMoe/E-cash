@@ -1,0 +1,4 @@
+/vendor
+/cert
+.env
+composer.lock

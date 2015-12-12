@@ -1,0 +1,104 @@
+***REMOVED*** Space out content a bit ***REMOVED***
+
+body ***REMOVED***
+    padding-top: 20px;
+    padding-bottom: 20px;
+***REMOVED***
+
+
+***REMOVED*** Everything but the jumbotron gets side spacing for mobile first views ***REMOVED***
+
+.header,
+.marketing,
+.footer ***REMOVED***
+    padding-left: 15px;
+    padding-right: 15px;
+***REMOVED***
+
+
+***REMOVED*** Custom page header ***REMOVED***
+
+.header ***REMOVED***
+    border-bottom: 1px solid #e5e5e5;
+***REMOVED***
+
+
+***REMOVED*** Make the masthead heading the same height as the navigation ***REMOVED***
+
+.header h3 ***REMOVED***
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 40px;
+    padding-bottom: 19px;
+***REMOVED***
+
+
+***REMOVED*** Custom page footer ***REMOVED***
+
+.footer ***REMOVED***
+    padding-top: 19px;
+    color: #777;
+    border-top: 1px solid #e5e5e5;
+***REMOVED***
+
+
+***REMOVED*** Customize container ***REMOVED***
+
+@media (min-width: 768px) ***REMOVED***
+    .container ***REMOVED***
+        max-width: 730px;
+    ***REMOVED***
+***REMOVED***
+
+.container-narrow > hr ***REMOVED***
+    margin: 30px 0;
+***REMOVED***
+
+
+***REMOVED*** Main marketing message and sign up button ***REMOVED***
+
+.jumbotron ***REMOVED***
+    text-align: center;
+    border-bottom: 1px solid #e5e5e5;
+***REMOVED***
+
+.jumbotron .btn ***REMOVED***
+    font-size: 21px;
+    padding: 14px 24px;
+***REMOVED***
+
+
+***REMOVED*** Supporting marketing content ***REMOVED***
+
+.marketing ***REMOVED***
+    margin: 40px 0;
+***REMOVED***
+
+.marketing p + h4 ***REMOVED***
+    margin-top: 28px;
+***REMOVED***
+
+
+.btn ***REMOVED***
+    border-radius: 0;
+***REMOVED***
+
+***REMOVED*** Responsive: Portrait tablets and up ***REMOVED***
+
+@media screen and (min-width: 768px) ***REMOVED***
+    ***REMOVED*** Remove the padding we set earlier ***REMOVED***
+    .header,
+    .marketing,
+    .footer ***REMOVED***
+        padding-left: 0;
+        padding-right: 0;
+    ***REMOVED***
+    ***REMOVED*** Space out the masthead ***REMOVED***
+    .header ***REMOVED***
+        margin-bottom: 30px;
+    ***REMOVED***
+    ***REMOVED*** Remove the bottom border on the jumbotron for visual effect ***REMOVED***
+    .jumbotron ***REMOVED***
+        border-bottom: 0;
+    ***REMOVED***
+***REMOVED***

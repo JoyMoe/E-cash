@@ -1,0 +1,36 @@
+***REMOVED*** CSS3 keyframes ***REMOVED***
+
+@-webkit-keyframes ckw ***REMOVED***
+    0% ***REMOVED***
+        -moz-transform: rotate(0deg***REMOVED***
+        -webkit-transform: rotate(0deg***REMOVED***
+    ***REMOVED***
+    100% ***REMOVED***
+        -moz-transform: rotate(360deg***REMOVED***
+        -webkit-transform: rotate(360deg***REMOVED***
+    ***REMOVED***
+***REMOVED***
+
+@-moz-keyframes ckw ***REMOVED***
+    0% ***REMOVED***
+        -moz-transform: rotate(0deg***REMOVED***
+        -webkit-transform: rotate(0deg***REMOVED***
+    ***REMOVED***
+    100% ***REMOVED***
+        -moz-transform: rotate(360deg***REMOVED***
+        -webkit-transform: rotate(360deg***REMOVED***
+    ***REMOVED***
+***REMOVED***
+
+#loading ***REMOVED***
+    margin: 0 auto;
+    background: url('../images/loading.png') no-repeat 0 0;
+    width: 256px;
+    height: 256px;
+    -moz-animation-name: ckw;
+    -moz-animation-duration: 3s;
+    -moz-animation-iteration-count: infinite;
+    -webkit-animation-name: ckw;
+    -webkit-animation-duration: 3s;
+    -webkit-animation-iteration-count: infinite;
+***REMOVED***
