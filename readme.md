@@ -1,7 +1,7 @@
 Quick E-cash
 ===
 
-[![Build Status](https://img.shields.io/travis/labs7in0/E-cash.svg)](https://travis-ci.org/labs7in0/omnipay-wechat)
+[![Build Status](https://img.shields.io/travis/labs7in0/E-cash.svg)](https://travis-ci.org/labs7in0/E-cash)
 [![Releases Downloads](https://img.shields.io/github/downloads/labs7in0/E-cash/total.svg)](https://github.com/labs7in0/E-cash/releases)
 [![Releases](https://img.shields.io/github/release/labs7in0/E-cash.svg)](https://github.com/labs7in0/E-cash/releases/latest)
 [![Releases Downloads](https://img.shields.io/github/downloads/labs7in0/E-cash/latest/total.svg)](https://github.com/labs7in0/E-cash/releases/latest)
