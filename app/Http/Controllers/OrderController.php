@@ -18,7 +18,9 @@ class OrderController extends Controller
 
     private function xchange($value, $pair = 'CNYUSD')
     ***REMOVED***
-        $url = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.xchange%20where%20pair%20%3D%20%22' . $pair . '%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys';
+        $url = 'https://query.yahooapis.com/v1/public/yql?q='
+        . urlencode('select * from yahoo.finance.xchange where pair = "'
+            . $pair . '"&format=json&diagnostics=true&env=store://datatables.org/alltableswithkeys'***REMOVED***
 
         $ch = curl_init(***REMOVED***
         curl_setopt(CURLOPT_TIMEOUT, 30***REMOVED***
@@ -247,7 +249,10 @@ class OrderController extends Controller
                     if ($order['status'] === 'pending') ***REMOVED***
                         $order->gateway = $gateway;
                         $order->transaction_id = $responseData['PAYMENTINFO_0_TRANSACTIONID'];
-                        $order->received = $this->xchange($responseData['PAYMENTINFO_0_AMT'] - $responseData['PAYMENTINFO_0_FEEAMT'], 'USDCNY'***REMOVED***
+                        $order->received = $this->xchange(
+                            $responseData['PAYMENTINFO_0_AMT'] - $responseData['PAYMENTINFO_0_FEEAMT'],
+                            'USDCNY'
+                        ***REMOVED***
                         $order->status = 'processing';
                     ***REMOVED***
                 ***REMOVED***

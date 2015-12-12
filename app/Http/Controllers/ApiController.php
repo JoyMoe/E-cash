@@ -34,7 +34,12 @@ class ApiController extends Controller
         ***REMOVED***
 
             try ***REMOVED***
-                return openssl_verify(http_build_query($data), base64_decode($signature), $public_key, OPENSSL_ALGO_SHA256***REMOVED***
+                return openssl_verify(
+                    http_build_query($data),
+                    base64_decode($signature),
+                    $public_key,
+                    OPENSSL_ALGO_SHA256
+                ***REMOVED***
             ***REMOVED*** catch (Exception $e) ***REMOVED***
                 return false;
             ***REMOVED***
@@ -56,13 +61,14 @@ class ApiController extends Controller
     ***REMOVED***
         $data = $request->all(***REMOVED***
 
-        $merchandiser = Merchandiser::findOrFail($data['merchandiser_id']***REMOVED***
+        $merch = Merchandiser::findOrFail($data['merchandiser_id']***REMOVED***
 
-        if ($this->verify($data, $merchandiser['pubkey'])) ***REMOVED***
+        if ($this->verify($data, $merch['pubkey'])) ***REMOVED***
             $order = Order::where('trade_no', $data['trade_no'])->first(***REMOVED***
             if (empty($order)) ***REMOVED***
-                if (parse_url($data['returnUrl'], PHP_URL_HOST) != $merchandiser['domain'] || parse_url($data['notifyUrl'], PHP_URL_HOST) != $merchandiser['domain']) ***REMOVED***
-                    $this->jsonOutput(null, 'Your URL must belongs to domain "' . $merchandiser['domain'] . '"', '400'***REMOVED***
+                if (parse_url($data['returnUrl'], PHP_URL_HOST) != $merch['domain'] ||
+                    parse_url($data['notifyUrl'], PHP_URL_HOST) != $merch['domain']) ***REMOVED***
+                    $this->jsonOutput(null, 'Your URL must belongs to domain "' . $merch['domain'] . '"', '400'***REMOVED***
                 ***REMOVED***
 
                 $order = new Order;
@@ -92,9 +98,9 @@ class ApiController extends Controller
 
         $data = $request->all(***REMOVED***
 
-        $merchandiser = Merchandiser::findOrFail($order['merchandiser_id']***REMOVED***
+        $merch = Merchandiser::findOrFail($order['merchandiser_id']***REMOVED***
 
-        if ($this->verify($data, $merchandiser['pubkey'])) ***REMOVED***
+        if ($this->verify($data, $merch['pubkey'])) ***REMOVED***
             $this->jsonOutput($order***REMOVED***
         ***REMOVED*** else ***REMOVED***
             $this->jsonOutput(null, 'Signature Invalid or timestamp expired', '403'***REMOVED***
@@ -107,9 +113,9 @@ class ApiController extends Controller
 
         $data = $request->all(***REMOVED***
 
-        $merchandiser = Merchandiser::findOrFail($order['merchandiser_id']***REMOVED***
+        $merch = Merchandiser::findOrFail($order['merchandiser_id']***REMOVED***
 
-        if ($this->verify($data, $merchandiser['pubkey'])) ***REMOVED***
+        if ($this->verify($data, $merch['pubkey'])) ***REMOVED***
             if (!empty($data['subject'])) ***REMOVED***
                 $order->subject = $data['subject'];
             ***REMOVED***
@@ -122,11 +128,11 @@ class ApiController extends Controller
                 $order->description = $data['description'];
             ***REMOVED***
 
-            if (!empty($data['returnUrl']) && parse_url($data['returnUrl'], PHP_URL_HOST) === $merchandiser['domain']) ***REMOVED***
+            if (!empty($data['returnUrl']) && parse_url($data['returnUrl'], PHP_URL_HOST) === $merch['domain']) ***REMOVED***
                 $order->returnUrl = $data['returnUrl'];
             ***REMOVED***
 
-            if (!empty($data['notifyUrl']) && parse_url($data['notifyUrl'], PHP_URL_HOST) === $merchandiser['domain']) ***REMOVED***
+            if (!empty($data['notifyUrl']) && parse_url($data['notifyUrl'], PHP_URL_HOST) === $merch['domain']) ***REMOVED***
                 $order->notifyUrl = $data['notifyUrl'];
             ***REMOVED***
 
@@ -144,10 +150,10 @@ class ApiController extends Controller
 
         $data = $request->all(***REMOVED***
 
-        $merchandiser = Merchandiser::findOrFail($order['merchandiser_id']***REMOVED***
+        $merch = Merchandiser::findOrFail($order['merchandiser_id']***REMOVED***
 
         if (!empty($data['trade_no']) && $data['trade_no'] === $order->trade_no) ***REMOVED***
-            if ($this->verify($data, $merchandiser['pubkey'])) ***REMOVED***
+            if ($this->verify($data, $merch['pubkey'])) ***REMOVED***
                 if ($order->status === 'processing') ***REMOVED***
                     $order->status = 'done';
                     $order->save(***REMOVED***
@@ -168,10 +174,10 @@ class ApiController extends Controller
 
         $data = $request->all(***REMOVED***
 
-        $merchandiser = Merchandiser::findOrFail($order['merchandiser_id']***REMOVED***
+        $merch = Merchandiser::findOrFail($order['merchandiser_id']***REMOVED***
 
         if (!empty($data['trade_no']) && $data['trade_no'] === $order->trade_no) ***REMOVED***
-            if ($this->verify($data, $merchandiser['pubkey'])) ***REMOVED***
+            if ($this->verify($data, $merch['pubkey'])) ***REMOVED***
                 if (in_array($order->status, ['refunded', 'cancelled'])) ***REMOVED***
                     $order->delete(***REMOVED***
 
