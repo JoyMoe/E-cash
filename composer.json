@@ -1,7 +1,7 @@
 ***REMOVED***
-    "name": "laravel/lumen",
-    "description": "The Laravel Lumen Framework.",
-    "keywords": ["framework", "laravel", "lumen"],
+    "name": "labs7in0/E-cash",
+    "description": "A payment gateway with restful APIs",
+    "keywords": ["payment", "lumen", "restful"],
     "license": "MIT",
     "type": "project",
     "require": ***REMOVED***
