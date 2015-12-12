@@ -9,7 +9,7 @@ before_script:
   - composer self-update
   - composer install -n --dev --prefer-source
 
-script: vendor/bin/phpcs --standard=PSR2 app && vendor/bin/phpunit --coverage-clover=coverage.xml
+script: vendor/bin/phpcs --standard=PSR2 app && cp .env.example .env && vendor/bin/phpunit --coverage-clover=coverage.xml
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)
