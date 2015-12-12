@@ -1,6 +1,7 @@
 ***REMOVED***
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class User extends Migration
 ***REMOVED***
@@ -11,7 +12,7 @@ class User extends Migration
      ***REMOVED***
     public function up()
     ***REMOVED***
-        Schema::create('users', function ($table) ***REMOVED***
+        Schema::create('users', function (Blueprint $table) ***REMOVED***
             $table->increments('id'***REMOVED***
             $table->string('name'***REMOVED***
             $table->string('email'***REMOVED***

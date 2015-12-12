@@ -1,6 +1,7 @@
 ***REMOVED***
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class Order extends Migration
 ***REMOVED***
@@ -11,7 +12,7 @@ class Order extends Migration
      ***REMOVED***
     public function up()
     ***REMOVED***
-        Schema::create('orders', function ($table) ***REMOVED***
+        Schema::create('orders', function (Blueprint $table) ***REMOVED***
             $table->increments('id'***REMOVED***
             $table->integer('merchandiser_id')->unsigned(***REMOVED***
             $table->string('trade_no')->unique(***REMOVED***
