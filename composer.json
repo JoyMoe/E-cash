@@ -17,6 +17,7 @@
     "require-dev": ***REMOVED***
         "phpunit/phpunit": "~4.8",
         "fzaninotto/faker": "~1.0",
+        "johnkary/phpunit-speedtrap": "^1.0",
         "squizlabs/php_codesniffer": "~2.5",
         "phploc/phploc": "*",
         "sebastian/phpcpd": "*"
