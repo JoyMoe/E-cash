@@ -15,9 +15,11 @@
         "omnipay/paypal": "^2.4"
     ***REMOVED***,
     "require-dev": ***REMOVED***
-        "phpunit/phpunit": "~4.0",
+        "phpunit/phpunit": "~4.8",
         "fzaninotto/faker": "~1.0",
-        "squizlabs/php_codesniffer": "~2.5"
+        "squizlabs/php_codesniffer": "~2.5",
+        "phploc/phploc": "*",
+        "sebastian/phpcpd": "*"
     ***REMOVED***,
     "autoload": ***REMOVED***
         "psr-4": ***REMOVED***
