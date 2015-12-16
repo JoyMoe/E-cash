@@ -1,16 +1,16 @@
-$(function() ***REMOVED***
-    $('#payment').submit(function () ***REMOVED***
-        $.post(window.location, ***REMOVED***
+$(function() {
+    $('#payment').submit(function () {
+        $.post(window.location, {
             gateway: $('input[name="gateway"]:checked').val()
-        ***REMOVED***, function(result) ***REMOVED***
-            var pay = window.open('about:blank', 'popUpWindow','height=750, width=1000, left=300, top=100, resizable=yes, scrollbars=yes, toolbar=yes, menubar=no, location=no, directories=no, status=yes'***REMOVED***
-            if (pay) ***REMOVED***
-                pay.document.write(result***REMOVED***
-            ***REMOVED*** else ***REMOVED***
-                document.write(result***REMOVED***
-            ***REMOVED***
-        ***REMOVED***, 'html'***REMOVED***
+        }, function(result) {
+            var pay = window.open('about:blank', 'popUpWindow','height=750, width=1000, left=300, top=100, resizable=yes, scrollbars=yes, toolbar=yes, menubar=no, location=no, directories=no, status=yes');
+            if (pay) {
+                pay.document.write(result);
+            } else {
+                document.write(result);
+            }
+        }, 'html');
 
         return false;
-    ***REMOVED******REMOVED***
-***REMOVED******REMOVED***
+    });
+});

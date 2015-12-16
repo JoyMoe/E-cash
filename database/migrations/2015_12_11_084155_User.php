@@ -1,35 +1,35 @@
-***REMOVED***
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 class User extends Migration
-***REMOVED***
-    ***REMOVED****
+{
+    /**
      * Run the migrations.
      *
      * @return void
-     ***REMOVED***
+     */
     public function up()
-    ***REMOVED***
-        Schema::create('users', function (Blueprint $table) ***REMOVED***
-            $table->increments('id'***REMOVED***
-            $table->string('name'***REMOVED***
-            $table->string('email'***REMOVED***
-            $table->string('password'***REMOVED***
-            $table->rememberToken(***REMOVED***
-            $table->enum('status', array('frozen', 'pending', 'alive'))->default('pending'***REMOVED***
-            $table->timestamps(***REMOVED***
-        ***REMOVED******REMOVED***
-    ***REMOVED***
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('email');
+            $table->string('password');
+            $table->rememberToken();
+            $table->enum('status', array('frozen', 'pending', 'alive'))->default('pending');
+            $table->timestamps();
+        });
+    }
 
-    ***REMOVED****
+    /**
      * Reverse the migrations.
      *
      * @return void
-     ***REMOVED***
+     */
     public function down()
-    ***REMOVED***
-        Schema::dropIfExists('users'***REMOVED***
-    ***REMOVED***
-***REMOVED***
+    {
+        Schema::dropIfExists('users');
+    }
+}

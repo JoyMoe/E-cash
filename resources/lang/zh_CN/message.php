@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 
 return [
     'amount' => '金额',

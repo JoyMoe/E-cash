@@ -1,21 +1,21 @@
-***REMOVED***
+<?php
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
 class DatabaseSeeder extends Seeder
-***REMOVED***
-    ***REMOVED****
+{
+    /**
      * Run the database seeds.
      *
      * @return void
-     ***REMOVED***
+     */
     public function run()
-    ***REMOVED***
-        Model::unguard(***REMOVED***
+    {
+        Model::unguard();
 
-        // $this->call('UserTableSeeder'***REMOVED***
+        // $this->call('UserTableSeeder');
 
-        Model::reguard(***REMOVED***
-    ***REMOVED***
-***REMOVED***
+        Model::reguard();
+    }
+}

@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 
 return [
     'amount' => 'Amount',

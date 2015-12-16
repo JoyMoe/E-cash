@@ -1,6 +1,6 @@
-***REMOVED***
+<?php
 
-***REMOVED***
+/*
 |--------------------------------------------------------------------------
 | Model Factories
 |--------------------------------------------------------------------------
@@ -9,13 +9,13 @@
 | you a convenient way to create models for testing and seeding your
 | database. Just tell the factory how a default model should look.
 |
-***REMOVED***
+*/
 
-$factory->define(App\User::class, function ($faker) ***REMOVED***
+$factory->define(App\User::class, function ($faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->email,
         'password' => str_random(10),
         'remember_token' => str_random(10),
     ];
-***REMOVED******REMOVED***
+});

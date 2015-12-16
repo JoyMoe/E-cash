@@ -1,6 +1,6 @@
-***REMOVED***
+<?php
 
-***REMOVED***
+/*
 |--------------------------------------------------------------------------
 | Application Routes
 |--------------------------------------------------------------------------
@@ -9,22 +9,22 @@
 | It is a breeze. Simply tell Lumen the URIs it should respond to
 | and give it the Closure to call when that URI is requested.
 |
-***REMOVED***
+*/
 
-$app->get('/', function () use ($app) ***REMOVED***
-    return $app->welcome(***REMOVED***
-***REMOVED******REMOVED***
+$app->get('/', function () use ($app) {
+    return $app->welcome();
+});
 
-$app->post('/api/order', 'ApiController@submitOrder'***REMOVED***
-$app->get('/api/order***REMOVED*****REMOVED***order_id***REMOVED***', 'ApiController@getOrder'***REMOVED***
-$app->put('/api/order***REMOVED*****REMOVED***order_id***REMOVED***', 'ApiController@modifyOrder'***REMOVED***
-$app->post('/api/order***REMOVED*****REMOVED***order_id***REMOVED***', 'ApiController@completeOrder'***REMOVED***
-$app->delete('/api/order***REMOVED*****REMOVED***order_id***REMOVED***', 'ApiController@removeOrder'***REMOVED***
+$app->post('/api/order', 'ApiController@submitOrder');
+$app->get('/api/order/{order_id}', 'ApiController@getOrder');
+$app->put('/api/order/{order_id}', 'ApiController@modifyOrder');
+$app->post('/api/order/{order_id}', 'ApiController@completeOrder');
+$app->delete('/api/order/{order_id}', 'ApiController@removeOrder');
 
-$app->get('/order***REMOVED*****REMOVED***order_id***REMOVED***', 'OrderController@showOrder'***REMOVED***
-$app->post('/order***REMOVED*****REMOVED***order_id***REMOVED***', 'OrderController@doOrder'***REMOVED***
+$app->get('/order/{order_id}', 'OrderController@showOrder');
+$app->post('/order/{order_id}', 'OrderController@doOrder');
 
-$app->get('/order***REMOVED*****REMOVED***order_id***REMOVED*****REMOVED***back***REMOVED*****REMOVED***gateway***REMOVED***', [
+$app->get('/order/{order_id}/back/{gateway}', [
     'as' => 'back', 'uses' => 'OrderController@doBack'
-]***REMOVED***
-$app->post('/order***REMOVED*****REMOVED***order_id***REMOVED*****REMOVED***back***REMOVED*****REMOVED***gateway***REMOVED***', 'OrderController@doBack'***REMOVED***
+]);
+$app->post('/order/{order_id}/back/{gateway}', 'OrderController@doBack');

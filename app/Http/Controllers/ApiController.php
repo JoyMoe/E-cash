@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 
 namespace App\Http\Controllers;
 
@@ -8,68 +8,68 @@ use App\Order;
 use Illuminate\Http\Request;
 
 class ApiController extends Controller
-***REMOVED***
+{
     private function sign($text, $private_key)
-    ***REMOVED***
-    ***REMOVED***
+    {
+        $signature = '';
 
-        openssl_sign($text, $signature, $private_key, OPENSSL_ALGO_SHA256***REMOVED***
+        openssl_sign($text, $signature, $private_key, OPENSSL_ALGO_SHA256);
 
-    ***REMOVED***
-    ***REMOVED***
+        return base64_encode($signature);
+    }
 
     private function verify($data, $public_key)
-    ***REMOVED***
-        if (empty($data['sign'])) ***REMOVED***
+    {
+        if (empty($data['sign'])) {
             return false;
-        ***REMOVED*** else ***REMOVED***
+        } else {
             $signature = $data['sign'];
-        ***REMOVED***
+        }
 
-        if (!empty($data['timestamp']) && time() - 60 <= $data['timestamp']) ***REMOVED***
-        ***REMOVED***
-            unset($data['sign']***REMOVED***
+        if (!empty($data['timestamp']) && time() - 60 <= $data['timestamp']) {
+            unset($data['description']);
+            unset($data['sign']);
 
-        ***REMOVED***
-        ***REMOVED***
+            reset($data);
+            ksort($data);
 
-            try ***REMOVED***
+            try {
                 return openssl_verify(
                     http_build_query($data),
                     base64_decode($signature),
                     $public_key,
                     OPENSSL_ALGO_SHA256
-                ***REMOVED***
-            ***REMOVED*** catch (Exception $e) ***REMOVED***
+                );
+            } catch (Exception $e) {
                 return false;
-            ***REMOVED***
-        ***REMOVED*** else ***REMOVED***
+            }
+        } else {
             return false;
-        ***REMOVED***
-    ***REMOVED***
+        }
+    }
 
     private function jsonOutput($data, $message = '', $status = 0)
-    ***REMOVED***
+    {
         exit(json_encode([
             'data' => $data,
             'message' => $message,
             'status' => $status,
-        ])***REMOVED***
-    ***REMOVED***
+        ]));
+    }
 
     public function submitOrder(Request $request)
-    ***REMOVED***
-        $data = $request->all(***REMOVED***
+    {
+        $data = $request->all();
 
-        $merch = Merchandiser::findOrFail($data['merchandiser_id']***REMOVED***
+        $merch = Merchandiser::findOrFail($data['merchandiser_id']);
 
-        if ($this->verify($data, $merch['pubkey'])) ***REMOVED***
-            $order = Order::where('trade_no', $data['trade_no'])->first(***REMOVED***
-            if (empty($order)) ***REMOVED***
+        if ($this->verify($data, $merch['pubkey'])) {
+            $order = Order::where('trade_no', $data['trade_no'])->first();
+            if (empty($order)) {
                 if (parse_url($data['returnUrl'], PHP_URL_HOST) != $merch['domain'] ||
-                    parse_url($data['notifyUrl'], PHP_URL_HOST) != $merch['domain']) ***REMOVED***
-                    $this->jsonOutput(null, 'Your URL must belongs to domain "' . $merch['domain'] . '"', '400'***REMOVED***
-                ***REMOVED***
+                    parse_url($data['notifyUrl'], PHP_URL_HOST) != $merch['domain']) {
+                    $this->jsonOutput(null, 'Your URL must belongs to domain "' . $merch['domain'] . '"', '400');
+                }
 
                 $order = new Order;
 
@@ -81,115 +81,115 @@ class ApiController extends Controller
                 $order->returnUrl = $data['returnUrl'];
                 $order->notifyUrl = $data['notifyUrl'];
 
-                $order->save(***REMOVED***
+                $order->save();
 
-                $this->jsonOutput($order***REMOVED***
-            ***REMOVED*** else ***REMOVED***
-                $this->jsonOutput(null, 'trade_no already exsits', '409'***REMOVED***
-            ***REMOVED***
-        ***REMOVED*** else ***REMOVED***
-            $this->jsonOutput(null, 'Signature Invalid or timestamp expired', '403'***REMOVED***
-        ***REMOVED***
-    ***REMOVED***
+                $this->jsonOutput($order);
+            } else {
+                $this->jsonOutput(null, 'trade_no already exsits', '409');
+            }
+        } else {
+            $this->jsonOutput(null, 'Signature Invalid or timestamp expired', '403');
+        }
+    }
 
     public function getOrder(Request $request, $id)
-    ***REMOVED***
-        $order = Order::findOrFail($id***REMOVED***
+    {
+        $order = Order::findOrFail($id);
 
-        $data = $request->all(***REMOVED***
+        $data = $request->all();
 
-        $merch = Merchandiser::findOrFail($order['merchandiser_id']***REMOVED***
+        $merch = Merchandiser::findOrFail($order['merchandiser_id']);
 
-        if ($this->verify($data, $merch['pubkey'])) ***REMOVED***
-            $this->jsonOutput($order***REMOVED***
-        ***REMOVED*** else ***REMOVED***
-            $this->jsonOutput(null, 'Signature Invalid or timestamp expired', '403'***REMOVED***
-        ***REMOVED***
-    ***REMOVED***
+        if ($this->verify($data, $merch['pubkey'])) {
+            $this->jsonOutput($order);
+        } else {
+            $this->jsonOutput(null, 'Signature Invalid or timestamp expired', '403');
+        }
+    }
 
     public function modifyOrder(Request $request, $id)
-    ***REMOVED***
-        $order = Order::findOrFail($id***REMOVED***
+    {
+        $order = Order::findOrFail($id);
 
-        $data = $request->all(***REMOVED***
+        $data = $request->all();
 
-        $merch = Merchandiser::findOrFail($order['merchandiser_id']***REMOVED***
+        $merch = Merchandiser::findOrFail($order['merchandiser_id']);
 
-        if ($this->verify($data, $merch['pubkey'])) ***REMOVED***
-            if (!empty($data['subject'])) ***REMOVED***
+        if ($this->verify($data, $merch['pubkey'])) {
+            if (!empty($data['subject'])) {
                 $order->subject = $data['subject'];
-            ***REMOVED***
+            }
 
-            if (!empty($data['amount'])) ***REMOVED***
+            if (!empty($data['amount'])) {
                 $order->amount = $data['amount'];
-            ***REMOVED***
+            }
 
-            if (!empty($data['description'])) ***REMOVED***
+            if (!empty($data['description'])) {
                 $order->description = $data['description'];
-            ***REMOVED***
+            }
 
-            if (!empty($data['returnUrl']) && parse_url($data['returnUrl'], PHP_URL_HOST) === $merch['domain']) ***REMOVED***
+            if (!empty($data['returnUrl']) && parse_url($data['returnUrl'], PHP_URL_HOST) === $merch['domain']) {
                 $order->returnUrl = $data['returnUrl'];
-            ***REMOVED***
+            }
 
-            if (!empty($data['notifyUrl']) && parse_url($data['notifyUrl'], PHP_URL_HOST) === $merch['domain']) ***REMOVED***
+            if (!empty($data['notifyUrl']) && parse_url($data['notifyUrl'], PHP_URL_HOST) === $merch['domain']) {
                 $order->notifyUrl = $data['notifyUrl'];
-            ***REMOVED***
+            }
 
-            $order->save(***REMOVED***
+            $order->save();
 
-            $this->jsonOutput($order***REMOVED***
-        ***REMOVED*** else ***REMOVED***
-            $this->jsonOutput(null, 'Signature Invalid or timestamp expired', '403'***REMOVED***
-        ***REMOVED***
-    ***REMOVED***
+            $this->jsonOutput($order);
+        } else {
+            $this->jsonOutput(null, 'Signature Invalid or timestamp expired', '403');
+        }
+    }
 
     public function completeOrder(Request $request, $id)
-    ***REMOVED***
-        $order = Order::findOrFail($id***REMOVED***
+    {
+        $order = Order::findOrFail($id);
 
-        $data = $request->all(***REMOVED***
+        $data = $request->all();
 
-        $merch = Merchandiser::findOrFail($order['merchandiser_id']***REMOVED***
+        $merch = Merchandiser::findOrFail($order['merchandiser_id']);
 
-        if (!empty($data['trade_no']) && $data['trade_no'] === $order->trade_no) ***REMOVED***
-            if ($this->verify($data, $merch['pubkey'])) ***REMOVED***
-                if ($order->status === 'processing') ***REMOVED***
+        if (!empty($data['trade_no']) && $data['trade_no'] === $order->trade_no) {
+            if ($this->verify($data, $merch['pubkey'])) {
+                if ($order->status === 'processing') {
                     $order->status = 'done';
-                    $order->save(***REMOVED***
-                ***REMOVED***
+                    $order->save();
+                }
 
-                $this->jsonOutput($order***REMOVED***
-            ***REMOVED*** else ***REMOVED***
-                $this->jsonOutput(null, 'Signature Invalid or timestamp expired', '403'***REMOVED***
-            ***REMOVED***
-        ***REMOVED*** else ***REMOVED***
-            $this->jsonOutput(null, 'trade_no not matched', '404'***REMOVED***
-        ***REMOVED***
-    ***REMOVED***
+                $this->jsonOutput($order);
+            } else {
+                $this->jsonOutput(null, 'Signature Invalid or timestamp expired', '403');
+            }
+        } else {
+            $this->jsonOutput(null, 'trade_no not matched', '404');
+        }
+    }
 
     public function removeOrder(Request $request, $id)
-    ***REMOVED***
-        $order = Order::findOrFail($id***REMOVED***
+    {
+        $order = Order::findOrFail($id);
 
-        $data = $request->all(***REMOVED***
+        $data = $request->all();
 
-        $merch = Merchandiser::findOrFail($order['merchandiser_id']***REMOVED***
+        $merch = Merchandiser::findOrFail($order['merchandiser_id']);
 
-        if (!empty($data['trade_no']) && $data['trade_no'] === $order->trade_no) ***REMOVED***
-            if ($this->verify($data, $merch['pubkey'])) ***REMOVED***
-                if (in_array($order->status, ['refunded', 'cancelled'])) ***REMOVED***
-                    $order->delete(***REMOVED***
+        if (!empty($data['trade_no']) && $data['trade_no'] === $order->trade_no) {
+            if ($this->verify($data, $merch['pubkey'])) {
+                if (in_array($order->status, ['refunded', 'cancelled'])) {
+                    $order->delete();
 
-                    $this->jsonOutput(null***REMOVED***
-                ***REMOVED*** else ***REMOVED***
-                    $this->jsonOutput(null, 'Cannot delete this order', '405'***REMOVED***
-                ***REMOVED***
-            ***REMOVED*** else ***REMOVED***
-                $this->jsonOutput(null, 'Signature Invalid or timestamp expired', '403'***REMOVED***
-            ***REMOVED***
-        ***REMOVED*** else ***REMOVED***
-            $this->jsonOutput(null, 'trade_no not matched', '404'***REMOVED***
-        ***REMOVED***
-    ***REMOVED***
-***REMOVED***
+                    $this->jsonOutput(null);
+                } else {
+                    $this->jsonOutput(null, 'Cannot delete this order', '405');
+                }
+            } else {
+                $this->jsonOutput(null, 'Signature Invalid or timestamp expired', '403');
+            }
+        } else {
+            $this->jsonOutput(null, 'trade_no not matched', '404');
+        }
+    }
+}

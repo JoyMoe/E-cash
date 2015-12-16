@@ -16,31 +16,31 @@
             <h3 class="text-muted">E-cash</h3>
         </div>
         <div class="jumbotron" id="order">
-            <h2>***REMOVED******REMOVED***trans('message.order_details')***REMOVED******REMOVED***</h2>
+            <h2>{{trans('message.order_details')}}</h2>
             <p class="lead"></p>
             <div class="panel panel-default">
-                <div class="panel-heading">***REMOVED******REMOVED***$order['subject']***REMOVED******REMOVED***</div>
+                <div class="panel-heading">{{$order['subject']}}</div>
                 <table class="table table-hover">
                     <tbody>
                         <tr>
-                            <th>***REMOVED******REMOVED***trans('message.merchandiser')***REMOVED******REMOVED***</th>
-                            <td>***REMOVED******REMOVED***$order['merchandiser']['name']***REMOVED******REMOVED***</td>
+                            <th>{{trans('message.merchandiser')}}</th>
+                            <td>{{$order['merchandiser']['name']}}</td>
                         </tr>
                         <tr>
-                            <th>***REMOVED******REMOVED***trans('message.order_id')***REMOVED******REMOVED***</th>
-                            <td>***REMOVED******REMOVED***$order['id']***REMOVED******REMOVED***</td>
+                            <th>{{trans('message.order_id')}}</th>
+                            <td>{{$order['id']}}</td>
                         </tr>
                         <tr>
-                            <th>***REMOVED******REMOVED***trans('message.amount')***REMOVED******REMOVED***</th>
-                            <td>***REMOVED******REMOVED***$order['amount']***REMOVED******REMOVED***</td>
+                            <th>{{trans('message.amount')}}</th>
+                            <td>{{$order['amount']}}</td>
                         </tr>
                         <tr>
-                            <th>***REMOVED******REMOVED***trans('message.status')***REMOVED******REMOVED***</th>
-                            <td>***REMOVED******REMOVED***trans('message.status_' . $order['status'])***REMOVED******REMOVED***</td>
+                            <th>{{trans('message.status')}}</th>
+                            <td>{{trans('message.status_' . $order['status'])}}</td>
                         </tr>
                     </tbody>
                 </table>
-                <div class="panel-footer" style="text-align:left;">***REMOVED******REMOVED***$order['description']***REMOVED******REMOVED***</div>
+                <div class="panel-footer" style="text-align:left;">{{$order['description']}}</div>
             </div>
             @if ($order['status'] == 'pending')
             <form method="post" id="payment" role="form">
@@ -58,14 +58,14 @@
                         <input type="radio" name="gateway" value="paypal" id="paypal" autocomplete="off"> Paypal
                     </label>
                 </div>
-                <button type="submit" class="btn btn-success btn-block">***REMOVED******REMOVED***trans('message.pay_now')***REMOVED******REMOVED***</button>
+                <button type="submit" class="btn btn-success btn-block">{{trans('message.pay_now')}}</button>
             </form>
             @else
-            <a href="***REMOVED******REMOVED***$order['returnUrl']***REMOVED******REMOVED***?id=***REMOVED******REMOVED***$order['id']***REMOVED******REMOVED***&trade_no=***REMOVED******REMOVED***$order['trade_no']***REMOVED******REMOVED***" class="btn btn-default btn-block" role="button">***REMOVED******REMOVED***trans('message.redirecting')***REMOVED******REMOVED***</a>
+            <a href="{{$order['returnUrl']}}?id={{$order['id']}}&trade_no={{$order['trade_no']}}" class="btn btn-default btn-block" role="button">{{trans('message.redirecting')}}</a>
             @endif
         </div>
         <div class="footer">
-            <p>&hearts; ***REMOVED***!! trans('message.hearts') !!***REMOVED***.</p>
+            <p>&hearts; {!! trans('message.hearts') !!}.</p>
             <p>&copy; <a href="https://7in0.me/">7IN0's Labs</a>.</p>
         </div>
     </div>
@@ -74,9 +74,9 @@
     <script src="/js/payment.js"></script>
     @if ($order['status'] != 'pending')
     <script>
-        setTimeout(function () ***REMOVED***
-            window.location = '***REMOVED******REMOVED***$order['returnUrl']***REMOVED******REMOVED***?id=***REMOVED******REMOVED***$order['id']***REMOVED******REMOVED***&trade_no=***REMOVED******REMOVED***$order['trade_no']***REMOVED******REMOVED***';
-        ***REMOVED***, 5000***REMOVED***
+        setTimeout(function () {
+            window.location = '{{$order['returnUrl']}}?id={{$order['id']}}&trade_no={{$order['trade_no']}}';
+        }, 5000);
     </script>
     @endif
 </body>

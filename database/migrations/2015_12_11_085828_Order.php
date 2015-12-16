@@ -1,44 +1,44 @@
-***REMOVED***
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 class Order extends Migration
-***REMOVED***
-    ***REMOVED****
+{
+    /**
      * Run the migrations.
      *
      * @return void
-     ***REMOVED***
+     */
     public function up()
-    ***REMOVED***
-        Schema::create('orders', function (Blueprint $table) ***REMOVED***
-            $table->increments('id'***REMOVED***
-            $table->integer('merchandiser_id')->unsigned(***REMOVED***
-            $table->string('trade_no')->unique(***REMOVED***
-            $table->string('subject'***REMOVED***
-            $table->float('amount'***REMOVED***
-            $table->text('description')->nullable(***REMOVED***
-            $table->string('returnUrl'***REMOVED***
-            $table->string('notifyUrl'***REMOVED***
-            $table->enum('gateway', array('alipay', 'paypal', 'unionpay', 'wechat'))->nullable(***REMOVED***
-            $table->string('transaction_id')->nullable(***REMOVED***
-            $table->float('received')->default(0***REMOVED***
-            $table->enum('status', array('pending', 'processing', 'done', 'refunded', 'cancelled'))->default('pending'***REMOVED***
-            $table->softDeletes(***REMOVED***
-            $table->timestamps(***REMOVED***
+    {
+        Schema::create('orders', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('merchandiser_id')->unsigned();
+            $table->string('trade_no')->unique();
+            $table->string('subject');
+            $table->float('amount');
+            $table->text('description')->nullable();
+            $table->string('returnUrl');
+            $table->string('notifyUrl');
+            $table->enum('gateway', array('alipay', 'paypal', 'unionpay', 'wechat'))->nullable();
+            $table->string('transaction_id')->nullable();
+            $table->float('received')->default(0);
+            $table->enum('status', array('pending', 'processing', 'done', 'refunded', 'cancelled'))->default('pending');
+            $table->softDeletes();
+            $table->timestamps();
 
-            $table->foreign('merchandiser_id')->references('id')->on('merchandisers'***REMOVED***
-        ***REMOVED******REMOVED***
-    ***REMOVED***
+            $table->foreign('merchandiser_id')->references('id')->on('merchandisers');
+        });
+    }
 
-    ***REMOVED****
+    /**
      * Reverse the migrations.
      *
      * @return void
-     ***REMOVED***
+     */
     public function down()
-    ***REMOVED***
-        Schema::dropIfExists('orders'***REMOVED***
-    ***REMOVED***
-***REMOVED***
+    {
+        Schema::dropIfExists('orders');
+    }
+}

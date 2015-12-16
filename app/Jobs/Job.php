@@ -1,4 +1,4 @@
-***REMOVED***
+<?php
 
 namespace App\Jobs;
 
@@ -9,8 +9,8 @@ use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 abstract class Job implements SelfHandling, ShouldQueue
-***REMOVED***
-    ***REMOVED***
+{
+    /*
     |--------------------------------------------------------------------------
     | Queueable Jobs
     |--------------------------------------------------------------------------
@@ -19,7 +19,7 @@ abstract class Job implements SelfHandling, ShouldQueue
     | is shared across all of your jobs. The trait included with the class
     | provides access to the "queueOn" and "delay" queue helper methods.
     |
-    ***REMOVED***
+    */
 
     use InteractsWithQueue, Queueable, SerializesModels;
-***REMOVED***
+}

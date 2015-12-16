@@ -1,37 +1,37 @@
-***REMOVED***
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 class Merchandiser extends Migration
-***REMOVED***
-    ***REMOVED****
+{
+    /**
      * Run the migrations.
      *
      * @return void
-     ***REMOVED***
+     */
     public function up()
-    ***REMOVED***
-        Schema::create('merchandisers', function (Blueprint $table) ***REMOVED***
-            $table->increments('id'***REMOVED***
-            $table->integer('user_id')->unsigned(***REMOVED***
-            $table->string('name'***REMOVED***
-            $table->string('domain'***REMOVED***
-            $table->text('pubkey')->nullable(***REMOVED***
-            $table->enum('status', array('frozen', 'testing', 'alive'))->default('testing'***REMOVED***
-            $table->timestamps(***REMOVED***
+    {
+        Schema::create('merchandisers', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id')->unsigned();
+            $table->string('name');
+            $table->string('domain');
+            $table->text('pubkey')->nullable();
+            $table->enum('status', array('frozen', 'testing', 'alive'))->default('testing');
+            $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users'***REMOVED***
-        ***REMOVED******REMOVED***
-    ***REMOVED***
+            $table->foreign('user_id')->references('id')->on('users');
+        });
+    }
 
-    ***REMOVED****
+    /**
      * Reverse the migrations.
      *
      * @return void
-     ***REMOVED***
+     */
     public function down()
-    ***REMOVED***
-        Schema::dropIfExists('merchandisers'***REMOVED***
-    ***REMOVED***
-***REMOVED***
+    {
+        Schema::dropIfExists('merchandisers');
+    }
+}
