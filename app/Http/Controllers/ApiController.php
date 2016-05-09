@@ -51,37 +51,53 @@ class ApiController extends Controller
     private function jsonOutput($data, $message = '', $status = 0)
     {
         exit(json_encode([
-            'data' => $data,
+            'data'    => $data,
             'message' => $message,
-            'status' => $status,
+            'status'  => $status,
         ]));
     }
 
     public function submitOrder(Request $request)
     {
+        $this->validate($request, [
+            'merchandiser_id' => 'required|integer',
+            'trade_no'        => 'required|max:255',
+            'subject'         => 'required|max:255',
+            'amount'          => 'required|numeric',
+            'returnUrl'       => 'required|url',
+            'notifyUrl'       => 'required|url',
+            'description'     => 'max:255',
+        ]);
+
         $data = $request->all();
 
-        $merch = Merchandiser::findOrFail($data['merchandiser_id']);
+        $merch = Merchandiser::where('status', 'alive')->findOrFail($data['merchandiser_id']);
 
         if ($this->verify($data, $merch['pubkey'])) {
-            $order = Order::where('trade_no', $data['trade_no'])->first();
+            $order = Order::where('merchandiser_id', $merch['id'])->where('trade_no', $data['trade_no'])->first();
             if (empty($order)) {
                 if (parse_url($data['returnUrl'], PHP_URL_HOST) != $merch['domain'] ||
                     parse_url($data['notifyUrl'], PHP_URL_HOST) != $merch['domain']) {
                     $this->jsonOutput(null, 'Your URL must belongs to domain "' . $merch['domain'] . '"', '400');
                 }
 
-                $order = new Order;
+                $order = Order::create([
+                    'merchandiser_id' => $data['merchandiser_id'],
+                    'trade_no'        => $data['trade_no'],
+                    'subject'         => $data['subject'],
+                    'amount'          => $data['amount'],
+                    'description'     => $data['description'],
+                    'returnUrl'       => $data['returnUrl'],
+                    'notifyUrl'       => $data['notifyUrl'],
+                ]);
 
-                $order->merchandiser_id = $data['merchandiser_id'];
-                $order->trade_no = $data['trade_no'];
-                $order->subject = $data['subject'];
-                $order->amount = $data['amount'];
-                $order->description = $data['description'];
-                $order->returnUrl = $data['returnUrl'];
-                $order->notifyUrl = $data['notifyUrl'];
-
-                $order->save();
+                $this->jsonOutput($order);
+            } elseif ($order->status == 'pending') {
+                $order->update([
+                    'subject'     => $data['subject'],
+                    'amount'      => $data['amount'],
+                    'description' => $data['description'],
+                ]);
 
                 $this->jsonOutput($order);
             } else {
