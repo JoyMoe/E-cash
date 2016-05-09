@@ -107,43 +107,6 @@ class ApiController extends Controller
         }
     }
 
-    public function modifyOrder(Request $request, $id)
-    {
-        $order = Order::findOrFail($id);
-
-        $data = $request->all();
-
-        $merch = Merchandiser::findOrFail($order['merchandiser_id']);
-
-        if ($this->verify($data, $merch['pubkey'])) {
-            if (!empty($data['subject'])) {
-                $order->subject = $data['subject'];
-            }
-
-            if (!empty($data['amount'])) {
-                $order->amount = $data['amount'];
-            }
-
-            if (!empty($data['description'])) {
-                $order->description = $data['description'];
-            }
-
-            if (!empty($data['returnUrl']) && parse_url($data['returnUrl'], PHP_URL_HOST) === $merch['domain']) {
-                $order->returnUrl = $data['returnUrl'];
-            }
-
-            if (!empty($data['notifyUrl']) && parse_url($data['notifyUrl'], PHP_URL_HOST) === $merch['domain']) {
-                $order->notifyUrl = $data['notifyUrl'];
-            }
-
-            $order->save();
-
-            $this->jsonOutput($order);
-        } else {
-            $this->jsonOutput(null, 'Signature Invalid or timestamp expired', '403');
-        }
-    }
-
     public function completeOrder(Request $request, $id)
     {
         $order = Order::findOrFail($id);

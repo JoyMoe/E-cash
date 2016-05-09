@@ -17,7 +17,6 @@ $app->get('/', function () use ($app) {
 
 $app->post('/api/order', 'ApiController@submitOrder');
 $app->get('/api/order/{order_id}', 'ApiController@getOrder');
-$app->put('/api/order/{order_id}', 'ApiController@modifyOrder');
 $app->post('/api/order/{order_id}', 'ApiController@completeOrder');
 $app->delete('/api/order/{order_id}', 'ApiController@removeOrder');
 
