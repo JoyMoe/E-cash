@@ -20,13 +20,13 @@ class OrderController extends Controller
     {
         $url = 'https://query.yahooapis.com/v1/public/yql?q='
         . urlencode('select * from yahoo.finance.xchange where pair = "'
-            . $pair . '"&format=json&diagnostics=true&env=store://datatables.org/alltableswithkeys');
+            . $pair . '"') . '&format=json&diagnostics=true&env=store://datatables.org/alltableswithkeys';
 
         $ch = curl_init();
-        curl_setopt(CURLOPT_TIMEOUT, 30);
-        curl_setopt(CURLOPT_URL, $url);
-        curl_setopt(CURLOPT_RETURNTRANSFER, true);
-        curl_setopt(CURLOPT_USERAGENT, 'xChange/0.9');
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'xChange/0.9');
         $result = json_decode(curl_exec($ch));
         curl_close($ch);
 
@@ -121,8 +121,6 @@ class OrderController extends Controller
                 $omnipay->setTestMode(getenv('payment.paypal.test'));
 
                 $response = $omnipay->purchase($params)->send();
-
-                $paypalResponse = $response->getData();
 
                 if ($response->isRedirect()) {
                     $order->gateway = $gateway;
