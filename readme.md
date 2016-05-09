@@ -26,22 +26,22 @@ Unix timestamp
 
 RSA SHA256 signature
 
-Sort data array (exclude all `text` paragrams) with keys and turn it into http_query string
+Sort data array (exclude all `text` and `array` paragrams) with keys and turn it into http_query string
 
 #### POST `/api/order`
-Submit an order to E-cash
+Submit or modify an order
 
 **Paragrams**
 
-| name | type | optional |
-|:----:|:----:|:--------:|
-|merchandiser_id|int|false|
-|trade_no|string|false|
-|subject|string|false|
-|amount|float|false|
-|description|text|true|
-|returnUrl|string|false|
-|notifyUrl|string|false|
+| name | type | optional | can modified |
+|:----:|:----:|:--------:|:------------:|
+|merchandiser_id|int|false|false|
+|trade_no|string|false|false|
+|subject|string|false|true|
+|amount|float|false|true|
+|items|array|true|true|
+|returnUrl|string|false|false|
+|notifyUrl|string|false|false|
 
 **Return**
 
@@ -56,23 +56,6 @@ Query an order
 **Paragrams**
 
 none
-
-**Return**
-
-Order object or error info
-
-#### PUT `/api/order/:order_id`
-Modify an order
-
-**Paragrams**
-
-| name | type | optional |
-|:----:|:----:|:--------:|
-|subject|string|true|
-|amount|float|true|
-|description|text|true|
-|returnUrl|string|true|
-|notifyUrl|string|true|
 
 **Return**
 
