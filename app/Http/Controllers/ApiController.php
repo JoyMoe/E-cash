@@ -48,9 +48,9 @@ class ApiController extends Controller
         }
     }
 
-    private function jsonOutput($data, $message = '', $status = 0)
+    private function jsonFormat($data, $message = '', $status = 0)
     {
-        exit(json_encode([
+        return (json_encode([
             'data'    => $data,
             'message' => $message,
             'status'  => $status,
@@ -78,7 +78,7 @@ class ApiController extends Controller
             if (empty($order)) {
                 if (parse_url($data['returnUrl'], PHP_URL_HOST) != $merch['domain'] ||
                     parse_url($data['notifyUrl'], PHP_URL_HOST) != $merch['domain']) {
-                    $this->jsonOutput(null, 'Your URL must belongs to domain "' . $merch['domain'] . '"', '400');
+                    return $this->jsonFormat(null, 'Your URL must belongs to domain "' . $merch['domain'] . '"', '400');
                 }
 
                 $order = Order::create([
@@ -91,7 +91,7 @@ class ApiController extends Controller
                     'notifyUrl'       => $data['notifyUrl'],
                 ]);
 
-                $this->jsonOutput($order);
+                return $this->jsonFormat($order);
             } elseif ($order->status == 'pending') {
                 $order->update([
                     'subject'     => $data['subject'],
@@ -99,12 +99,12 @@ class ApiController extends Controller
                     'description' => $data['description'],
                 ]);
 
-                $this->jsonOutput($order);
+                return $this->jsonFormat($order);
             } else {
-                $this->jsonOutput(null, 'trade_no already exsits', '409');
+                return $this->jsonFormat(null, 'trade_no already exsits', '409');
             }
         } else {
-            $this->jsonOutput(null, 'Signature Invalid or timestamp expired', '403');
+            return $this->jsonFormat(null, 'Signature Invalid or timestamp expired', '403');
         }
     }
 
@@ -117,9 +117,9 @@ class ApiController extends Controller
         $merch = Merchandiser::findOrFail($order['merchandiser_id']);
 
         if ($this->verify($data, $merch['pubkey'])) {
-            $this->jsonOutput($order);
+            return $this->jsonFormat($order);
         } else {
-            $this->jsonOutput(null, 'Signature Invalid or timestamp expired', '403');
+            return $this->jsonFormat(null, 'Signature Invalid or timestamp expired', '403');
         }
     }
 
@@ -138,12 +138,12 @@ class ApiController extends Controller
                     $order->save();
                 }
 
-                $this->jsonOutput($order);
+                return $this->jsonFormat($order);
             } else {
-                $this->jsonOutput(null, 'Signature Invalid or timestamp expired', '403');
+                return $this->jsonFormat(null, 'Signature Invalid or timestamp expired', '403');
             }
         } else {
-            $this->jsonOutput(null, 'trade_no not matched', '404');
+            return $this->jsonFormat(null, 'trade_no not matched', '404');
         }
     }
 
@@ -160,15 +160,15 @@ class ApiController extends Controller
                 if (in_array($order->status, ['refunded', 'cancelled'])) {
                     $order->delete();
 
-                    $this->jsonOutput(null);
+                    return $this->jsonFormat(null);
                 } else {
-                    $this->jsonOutput(null, 'Cannot delete this order', '405');
+                    return $this->jsonFormat(null, 'Cannot delete this order', '405');
                 }
             } else {
-                $this->jsonOutput(null, 'Signature Invalid or timestamp expired', '403');
+                return $this->jsonFormat(null, 'Signature Invalid or timestamp expired', '403');
             }
         } else {
-            $this->jsonOutput(null, 'trade_no not matched', '404');
+            return $this->jsonFormat(null, 'trade_no not matched', '404');
         }
     }
 }
