@@ -27,7 +27,7 @@ class ApiController extends Controller
         }
 
         if (!empty($data['timestamp']) && time() - 60 <= $data['timestamp']) {
-            unset($data['description']);
+            unset($data['items']);
             unset($data['sign']);
 
             reset($data);
@@ -66,7 +66,7 @@ class ApiController extends Controller
             'amount'          => 'required|numeric',
             'returnUrl'       => 'required|url',
             'notifyUrl'       => 'required|url',
-            'description'     => 'max:255',
+            'items'           => 'array',
         ]);
 
         $data = $request->all();
@@ -86,18 +86,22 @@ class ApiController extends Controller
                     'trade_no'        => $data['trade_no'],
                     'subject'         => $data['subject'],
                     'amount'          => $data['amount'],
-                    'description'     => $data['description'],
+                    'items'           => serialize($data['items']),
                     'returnUrl'       => $data['returnUrl'],
                     'notifyUrl'       => $data['notifyUrl'],
                 ]);
 
+                $order->items = unserialize($order->items);
+
                 return $this->jsonFormat($order);
             } elseif ($order->status == 'pending') {
                 $order->update([
-                    'subject'     => $data['subject'],
-                    'amount'      => $data['amount'],
-                    'description' => $data['description'],
+                    'subject' => $data['subject'],
+                    'amount'  => $data['amount'],
+                    'items'   => serialize($data['items']),
                 ]);
+
+                $order->items = unserialize($order->items);
 
                 return $this->jsonFormat($order);
             } else {

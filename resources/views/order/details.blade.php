@@ -40,7 +40,13 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="panel-footer" style="text-align:left;">{{$order['description']}}</div>
+                <div class="panel-footer" style="text-align:left;">
+                    <ul>
+                        @foreach ($order['items'] as $item)
+                        <li>{{$item['name']}}<span class="pull-right">x {{$item['quantity']}}</span></li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
             @if ($order['status'] == 'pending')
             <form method="post" id="payment" role="form">

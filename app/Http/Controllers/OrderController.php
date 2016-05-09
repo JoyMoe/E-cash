@@ -44,22 +44,31 @@ class OrderController extends Controller
 
     public function showOrder($order_id)
     {
-        return view('order.details', ['order' => Order::findOrFail($order_id)]);
+        $order = Order::find($order_id);
+
+        if ($order) {
+            $order->items = unserialize($order->items);
+
+            return view('order.details', ['order' => $order]);
+        } else {
+            return ['status' => '404', 'message' => 'Order not found'];
+        }
     }
 
     public function doOrder(Request $request, $order_id)
     {
-        $order = Order::findOrFail($order_id);
+        $order   = Order::findOrFail($order_id);
         $gateway = $request->input('gateway');
 
         $returnUrl = route('back', [
             'order_id' => $order_id,
-            'gateway' => $gateway,
+            'gateway'  => $gateway,
         ]);
 
         $order_id = str_pad($order_id, 8, '0', STR_PAD_LEFT);
 
-        $amount = $order->amount;
+        $amount      = $order->amount;
+        $description = implode(',', $order->items);
 
         switch ($gateway) {
             case 'alipay':
@@ -67,10 +76,10 @@ class OrderController extends Controller
 
                 $params = [
                     'out_trade_no' => $order_id,
-                    'returnUrl' => $returnUrl,
-                    'notifyUrl' => $returnUrl,
-                    'subject' => $order->description,
-                    'total_fee' => $amount,
+                    'returnUrl'    => $returnUrl,
+                    'notifyUrl'    => $returnUrl,
+                    'subject'      => $description,
+                    'total_fee'    => $amount,
                 ];
 
                 $omnipay->setPartner(getenv('payment.alipay.partner'));
@@ -93,12 +102,12 @@ class OrderController extends Controller
 
                 $params = [
                     'transactionId' => $order_id,
-                    'cancelUrl' => $returnUrl,
-                    'returnUrl' => $returnUrl,
-                    'notifyUrl' => $returnUrl,
-                    'description' => $order->description,
-                    'amount' => $amount,
-                    'currency' => 'USD',
+                    'cancelUrl'     => $returnUrl,
+                    'returnUrl'     => $returnUrl,
+                    'notifyUrl'     => $returnUrl,
+                    'description'   => $description,
+                    'amount'        => $amount,
+                    'currency'      => 'USD',
                 ];
 
                 $omnipay->setUsername(getenv('payment.paypal.user'));
@@ -121,10 +130,10 @@ class OrderController extends Controller
                 $omnipay = Omnipay::create('UnionPay_Express');
 
                 $params = [
-                    'orderId' => $order_id,
-                    'txnTime' => date('YmdHis'),
-                    'orderDesc' => $order->description,
-                    'txnAmt' => $amount * 100,
+                    'orderId'   => $order_id,
+                    'txnTime'   => date('YmdHis'),
+                    'orderDesc' => $description,
+                    'txnAmt'    => $amount * 100,
                     'returnUrl' => $returnUrl,
                     'notifyUrl' => $returnUrl,
                 ];
@@ -147,10 +156,10 @@ class OrderController extends Controller
 
                 $params = [
                     'out_trade_no' => $order_id,
-                    'notify_url' => $returnUrl,
-                    'body' => $order->description,
-                    'total_fee' => $amount,
-                    'fee_type' => 'CNY',
+                    'notify_url'   => $returnUrl,
+                    'body'         => $description,
+                    'total_fee'    => $amount,
+                    'fee_type'     => 'CNY',
                 ];
 
                 $omnipay->setAppId(getenv('payment.wechat.app_id'));
@@ -161,8 +170,8 @@ class OrderController extends Controller
 
                 if ($response->isRedirect()) {
                     $order->gateway = $gateway;
-                    $qrCode = new QrCode();
-                    $image = $qrCode
+                    $qrCode         = new QrCode();
+                    $image          = $qrCode
                         ->setText($response->getRedirectUrl())
                         ->setSize(120)
                         ->setPadding(0)
@@ -181,7 +190,7 @@ class OrderController extends Controller
     public function doBack(Request $request, $order_id, $gateway)
     {
         $order = Order::findOrFail($order_id);
-        $data = $request->all();
+        $data  = $request->all();
 
         $order_id = str_pad($order_id, 8, '0', STR_PAD_LEFT);
 
@@ -210,10 +219,10 @@ class OrderController extends Controller
                 if ($response->isSuccessful() && $response->isTradeStatusOk()) {
                     $responseData = $response->getData();
                     if ($order['status'] === 'pending') {
-                        $order->gateway = $gateway;
+                        $order->gateway        = $gateway;
                         $order->transaction_id = $responseData['request_params']['trade_no'];
-                        $order->received = $responseData['request_params']['total_fee'];
-                        $order->status = 'processing';
+                        $order->received       = $responseData['request_params']['total_fee'];
+                        $order->status         = 'processing';
                     }
 
                     if ($request->isMethod('post')) {
@@ -232,8 +241,8 @@ class OrderController extends Controller
 
                 $params = [
                     'transactionId' => $order['id'],
-                    'amount' => $amount,
-                    'currency' => 'USD',
+                    'amount'        => $amount,
+                    'currency'      => 'USD',
                 ];
 
                 $omnipay->setUsername(getenv('payment.paypal.user'));
@@ -247,9 +256,9 @@ class OrderController extends Controller
 
                 if ($response->isSuccessful() && $responseData['PAYMENTINFO_0_ACK'] === 'Success') {
                     if ($order['status'] === 'pending') {
-                        $order->gateway = $gateway;
+                        $order->gateway        = $gateway;
                         $order->transaction_id = $responseData['PAYMENTINFO_0_TRANSACTIONID'];
-                        $order->received = $this->xchange(
+                        $order->received       = $this->xchange(
                             $responseData['PAYMENTINFO_0_AMT'] - $responseData['PAYMENTINFO_0_FEEAMT'],
                             'USDCNY'
                         );
@@ -273,10 +282,10 @@ class OrderController extends Controller
 
                 if ($response->isSuccessful() && $responseData['respMsg'] === 'success') {
                     if ($order['status'] === 'pending') {
-                        $order->gateway = $gateway;
+                        $order->gateway        = $gateway;
                         $order->transaction_id = $responseData['queryId'];
-                        $order->received = $responseData['settleAmt'] / 100;
-                        $order->status = 'processing';
+                        $order->received       = $responseData['settleAmt'] / 100;
+                        $order->status         = 'processing';
                     }
                 }
                 break;
@@ -296,10 +305,10 @@ class OrderController extends Controller
                 if ($response->isSuccessful() && $response->isTradeStatusOk()) {
                     $responseData = $response->getData();
                     if ($order['status'] === 'pending') {
-                        $order->gateway = $gateway;
+                        $order->gateway        = $gateway;
                         $order->transaction_id = $responseData['transaction_id'];
-                        $order->received = $responseData['total_fee'];
-                        $order->status = 'processing';
+                        $order->received       = $responseData['total_fee'];
+                        $order->status         = 'processing';
                     }
 
                     if ($request->isMethod('post')) {

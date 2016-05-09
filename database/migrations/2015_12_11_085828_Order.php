@@ -18,7 +18,7 @@ class Order extends Migration
             $table->string('trade_no')->unique();
             $table->string('subject');
             $table->float('amount');
-            $table->text('description')->nullable();
+            $table->text('items')->nullable();
             $table->string('returnUrl');
             $table->string('notifyUrl');
             $table->enum('gateway', array('alipay', 'paypal', 'unionpay', 'wechat'))->nullable();
