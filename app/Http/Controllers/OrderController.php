@@ -67,8 +67,13 @@ class OrderController extends Controller
 
         $order_id = str_pad($order_id, 8, '0', STR_PAD_LEFT);
 
-        $amount      = $order->amount;
-        $description = implode(',', $order->items);
+        $amount = $order->amount;
+
+        $description = '';
+        $items       = unserialize($order->items);
+        foreach ($items as $item) {
+            $description .= $item['name'] . ' x ' . $item['quantity'] . ', ';
+        }
 
         switch ($gateway) {
             case 'alipay':
