@@ -152,7 +152,7 @@ class OrderController extends Controller
                 }
                 break;
             case 'wechat':
-                $omnipay = Omnipay::create('WeChat_Express');
+                $omnipay = Omnipay::create('WechatPay_Native');
 
                 $params = [
                     'out_trade_no' => $order_id,
@@ -163,16 +163,16 @@ class OrderController extends Controller
                 ];
 
                 $omnipay->setAppId(getenv('payment.wechat.app_id'));
-                $omnipay->setAppKey(getenv('payment.wechat.pay_sign_key'));
                 $omnipay->setMchId(getenv('payment.wechat.partner'));
+                $omnipay->setApiKey(getenv('payment.wechat.pay_sign_key'));
 
                 $response = $omnipay->purchase($params)->send();
 
-                if ($response->isRedirect()) {
+                if ($response->isSuccessful()) {
                     $order->gateway = $gateway;
                     $qrCode         = new QrCode();
                     $image          = $qrCode
-                        ->setText($response->getRedirectUrl())
+                        ->setText($response->getCodeUrl())
                         ->setSize(120)
                         ->setPadding(0)
                         ->getDataUri();
@@ -290,19 +290,19 @@ class OrderController extends Controller
                 }
                 break;
             case 'wechat':
-                $omnipay = Omnipay::create('WeChat_Express');
+                $omnipay = Omnipay::create('WechatPay');
 
                 $params = [
-                    'out_trade_no' => $order_id,
+                    'request_params' => file_get_contents('php://input'),
                 ];
 
                 $omnipay->setAppId(getenv('payment.wechat.app_id'));
-                $omnipay->setAppKey(getenv('payment.wechat.pay_sign_key'));
                 $omnipay->setMchId(getenv('payment.wechat.partner'));
+                $omnipay->setApiKey(getenv('payment.wechat.pay_sign_key'));
 
                 $response = $omnipay->completePurchase($params)->send();
 
-                if ($response->isSuccessful() && $response->isTradeStatusOk()) {
+                if ($response->isSuccessful() && $response->isPaid()) {
                     $responseData = $response->getData();
                     if ($order['status'] === 'pending') {
                         $order->gateway        = $gateway;

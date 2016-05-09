@@ -9,10 +9,10 @@
         "laravel/lumen-framework": "5.1.*",
         "vlucas/phpdotenv": "~1.0",
         "endroid/qrcode": "^1.5",
-        "labs7in0/omnipay-wechat": "^1.0",
-        "lokielse/omnipay-alipay": "^1.0",
-        "lokielse/omnipay-unionpay": "^0.3.6",
-        "omnipay/paypal": "^2.4"
+        "lokielse/omnipay-alipay": "~1.0",
+        "lokielse/omnipay-unionpay": "~0.3",
+        "lokielse/omnipay-wechatpay": "~1.0",
+        "omnipay/paypal": "~2.4"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.8",
