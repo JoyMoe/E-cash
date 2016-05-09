@@ -9,7 +9,7 @@
 | It is a breeze. Simply tell Lumen the URIs it should respond to
 | and give it the Closure to call when that URI is requested.
 |
-*/
+ */
 
 $app->get('/', function () use ($app) {
     return $app->welcome();
@@ -24,6 +24,6 @@ $app->get('/order/{order_id}', 'OrderController@showOrder');
 $app->post('/order/{order_id}', 'OrderController@doOrder');
 
 $app->get('/order/{order_id}/back/{gateway}', [
-    'as' => 'back', 'uses' => 'OrderController@doBack'
+    'as' => 'back', 'uses' => 'OrderController@doBack',
 ]);
 $app->post('/order/{order_id}/back/{gateway}', 'OrderController@doBack');
