@@ -92,7 +92,7 @@ class OrderController extends Controller
                     $order->gateway = $gateway;
                     $this->js($response->getRedirectUrl());
                 } else {
-                    exit(trans('message.faild_processing'));
+                    return trans('message.faild_processing');
                 }
                 break;
             case 'paypal':
@@ -123,7 +123,7 @@ class OrderController extends Controller
                     $order->gateway = $gateway;
                     $this->js($response->getRedirectUrl());
                 } else {
-                    exit(trans('message.faild_processing'));
+                    return trans('message.faild_processing');
                 }
                 break;
             case 'unionpay':
@@ -148,7 +148,7 @@ class OrderController extends Controller
                     $order->gateway = $gateway;
                     $response->redirect();
                 } else {
-                    exit(trans('message.faild_processing'));
+                    return trans('message.faild_processing');
                 }
                 break;
             case 'wechat':
@@ -177,11 +177,11 @@ class OrderController extends Controller
                         ->setPadding(0)
                         ->getDataUri();
                 } else {
-                    exit(trans('message.faild_processing'));
+                    return trans('message.faild_processing');
                 }
                 break;
             default:
-                exit(trans('message.unsupported_gateway'));
+                return trans('message.unsupported_gateway');
         }
 
         $order->save();
@@ -230,7 +230,7 @@ class OrderController extends Controller
                     }
                 } else {
                     if ($request->isMethod('post')) {
-                        exit('fail');
+                        return 'fail';
                     }
                 }
                 break;
@@ -316,12 +316,12 @@ class OrderController extends Controller
                     }
                 } else {
                     if ($request->isMethod('post')) {
-                        exit('<xml><return_code><![CDATA[FAIL]]></return_code></xml>');
+                        return '<xml><return_code><![CDATA[FAIL]]></return_code></xml>';
                     }
                 }
                 break;
             default:
-                exit(trans('message.unsupported_gateway'));
+                return trans('message.unsupported_gateway');
         }
 
         $order->save();
