@@ -1,11 +1,11 @@
 Quick E-cash
 ===
 
-[![Build Status](https://img.shields.io/travis/labs7in0/E-cash.svg)](https://travis-ci.org/labs7in0/E-cash)
-[![Coverage Status](https://img.shields.io/codecov/c/github/labs7in0/E-cash.svg)](https://codecov.io/github/labs7in0/E-cash)
-[![Releases Downloads](https://img.shields.io/github/downloads/labs7in0/E-cash/total.svg)](https://github.com/labs7in0/E-cash/releases)
-[![Releases](https://img.shields.io/github/release/labs7in0/E-cash.svg)](https://github.com/labs7in0/E-cash/releases/latest)
-[![Releases Downloads](https://img.shields.io/github/downloads/labs7in0/E-cash/latest/total.svg)](https://github.com/labs7in0/E-cash/releases/latest)
+[![Build Status](https://img.shields.io/travis/JoyMoe/E-cash.svg)](https://travis-ci.org/JoyMoe/E-cash)
+[![Coverage Status](https://img.shields.io/codecov/c/github/JoyMoe/E-cash.svg)](https://codecov.io/github/JoyMoe/E-cash)
+[![Releases Downloads](https://img.shields.io/github/downloads/JoyMoe/E-cash/total.svg)](https://github.com/JoyMoe/E-cash/releases)
+[![Releases](https://img.shields.io/github/release/JoyMoe/E-cash.svg)](https://github.com/JoyMoe/E-cash/releases/latest)
+[![Releases Downloads](https://img.shields.io/github/downloads/JoyMoe/E-cash/latest/total.svg)](https://github.com/JoyMoe/E-cash/releases/latest)
 
 ## API Reference
 
@@ -93,10 +93,6 @@ Null or error info
 - [x] Frontend redirecting
 - [ ] Backenden notification
 - [ ] Plugable gateway via plugins or extensions
-
-## Donate us
-
-[Donate us](https://7in0.me/#donate)
 
 ## License
  The MIT License (MIT)
