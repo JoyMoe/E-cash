@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Order;
 use Illuminate\Http\Request;
 use Omnipay\Omnipay;
@@ -42,7 +41,7 @@ class OrderController extends Controller
         echo '<script>window.location="' . $url . '";</script><a href="' . $url . '">Click</a>';
     }
 
-    public function showOrder($order_id)
+    public function show($order_id)
     {
         $order = Order::find($order_id);
 
@@ -55,12 +54,12 @@ class OrderController extends Controller
         }
     }
 
-    public function doOrder(Request $request, $order_id)
+    public function pay(Request $request, $order_id)
     {
         $order   = Order::findOrFail($order_id);
         $gateway = $request->input('gateway');
 
-        $returnUrl = route('back', [
+        $returnUrl = route('callback', [
             'order_id' => $order_id,
             'gateway'  => $gateway,
         ]);
@@ -190,7 +189,7 @@ class OrderController extends Controller
         $order->save();
     }
 
-    public function doBack(Request $request, $order_id, $gateway)
+    public function callback(Request $request, $order_id, $gateway)
     {
         $order = Order::findOrFail($order_id);
         $data  = $request->all();

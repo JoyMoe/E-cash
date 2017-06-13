@@ -16,6 +16,7 @@ Quick E-cash
 | name | type | optional |
 |:----:|:----:|:--------:|
 |timestamp|int|false|
+|nonce|string|false|
 |sign|string|false|
 
 ##### timestamp
@@ -26,31 +27,33 @@ Unix timestamp
 
 RSA SHA256 signature
 
-Sort data array (exclude all `text` and `array` paragrams) with keys and turn it into http_query string
+1. Sort all the parameters (exclude `text` and `array` paragrams) with keys and turn it into http_query string (no url-encoding).
+1. Sign the string with private key by SHA256.
+1. Encode the signature by BASE64.
 
-#### POST `/api/order`
-Submit or modify an order
+#### POST `/api/orders`
+Submit an order
 
 **Paragrams**
 
-| name | type | optional | can modified |
-|:----:|:----:|:--------:|:------------:|
-|merchandiser_id|int|false|false|
-|trade_no|string|false|false|
-|subject|string|false|true|
-|amount|float|false|true|
-|items|array|true|true|
-|returnUrl|string|false|false|
-|notifyUrl|string|false|false|
+| name | type | optional |
+|:----:|:----:|:--------:|
+|merchandiser_id|int|false|
+|trade_no|string|false|
+|subject|string|false|
+|amount|float|false|
+|items|array|true|
+|returnUrl|string|false|
+|notifyUrl|string|false|
 
 **Return**
 
 Order object or error info
 
-#### Redirect `/order/:order_id`
+#### Redirect `/orders/:order_id`
 Process an order
 
-#### GET `/api/order/:order_id`
+#### GET `/api/orders/:order_id`
 Query an order
 
 **Paragrams**
@@ -61,7 +64,23 @@ none
 
 Order object or error info
 
-#### POST `/api/order/:order_id`
+#### PUT `/api/orders/:order_id`
+#### PATCH `/api/orders/:order_id`
+Modify an order
+
+**Paragrams**
+
+| name | type | optional |
+|:----:|:----:|:--------:|
+|subject|string|true|
+|amount|float|true|
+|items|array|true|
+
+**Return**
+
+Order object or error info
+
+#### POST `/api/orders/:order_id`
 Complete an order
 
 **Paragrams**
@@ -74,7 +93,7 @@ Complete an order
 
 Order object or error info
 
-#### DELETE `/api/order/:order_id`
+#### DELETE `/api/orders/:order_id`
 Delete an order
 
 **Paragrams**

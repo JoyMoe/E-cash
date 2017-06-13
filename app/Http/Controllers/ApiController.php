@@ -2,28 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Merchandiser;
 use App\Order;
 use Illuminate\Http\Request;
 
 class ApiController extends Controller
 {
-    private function sign($text, $private_key)
-    {
-        $signature = '';
-
-        openssl_sign($text, $signature, $private_key, OPENSSL_ALGO_SHA256);
-
-        return base64_encode($signature);
-    }
-
     private function verify($data, $public_key)
     {
         if (empty($data['sign'])) {
             return false;
         } else {
             $signature = $data['sign'];
+        }
+
+        if (empty($data['nonce'])) {
+            return false;
         }
 
         if (!empty($data['timestamp']) && time() - 60 <= $data['timestamp']) {
@@ -35,7 +29,7 @@ class ApiController extends Controller
 
             try {
                 return openssl_verify(
-                    http_build_query($data),
+                    urldecode(http_build_query($data)),
                     base64_decode($signature),
                     $public_key,
                     OPENSSL_ALGO_SHA256
@@ -57,7 +51,7 @@ class ApiController extends Controller
         ]));
     }
 
-    public function submitOrder(Request $request)
+    public function store(Request $request)
     {
         $this->validate($request, [
             'merchandiser_id' => 'required|integer',
@@ -66,39 +60,30 @@ class ApiController extends Controller
             'amount'          => 'required|numeric',
             'returnUrl'       => 'required|url',
             'notifyUrl'       => 'required|url',
+            'timestamp'       => 'required',
+            'nonce'           => 'required',
+            'sign'            => 'required',
             'items'           => 'array',
         ]);
 
-        $data = $request->all();
+        $merch = Merchandiser::where('status', 'alive')->findOrFail($request->input('merchandiser_id'));
 
-        $merch = Merchandiser::where('status', 'alive')->findOrFail($data['merchandiser_id']);
-
-        if ($this->verify($data, $merch['pubkey'])) {
-            $order = Order::where('merchandiser_id', $merch['id'])->where('trade_no', $data['trade_no'])->first();
+        if ($this->verify($request->all(), $merch->pubkey)) {
+            $order = Order::where('merchandiser_id', $merch->id)->where('trade_no', $request->input('trade_no'))->first();
             if (empty($order)) {
-                if (parse_url($data['returnUrl'], PHP_URL_HOST) != $merch['domain'] ||
-                    parse_url($data['notifyUrl'], PHP_URL_HOST) != $merch['domain']) {
-                    return $this->jsonFormat(null, 'Your URL must belongs to domain "' . $merch['domain'] . '"', '400');
+                if (parse_url($request->input('returnUrl'), PHP_URL_HOST) != $merch->domain ||
+                    parse_url($request->input('notifyUrl'), PHP_URL_HOST) != $merch->domain) {
+                    return $this->jsonFormat(null, 'Your URL must belongs to domain "' . $merch->domain . '"', '400');
                 }
 
                 $order = Order::create([
-                    'merchandiser_id' => $data['merchandiser_id'],
-                    'trade_no'        => $data['trade_no'],
-                    'subject'         => $data['subject'],
-                    'amount'          => $data['amount'],
-                    'items'           => serialize($data['items']),
-                    'returnUrl'       => $data['returnUrl'],
-                    'notifyUrl'       => $data['notifyUrl'],
-                ]);
-
-                $order->items = unserialize($order->items);
-
-                return $this->jsonFormat($order);
-            } elseif ($order->status == 'pending') {
-                $order->update([
-                    'subject' => $data['subject'],
-                    'amount'  => $data['amount'],
-                    'items'   => serialize($data['items']),
+                    'merchandiser_id' => $request->input('merchandiser_id'),
+                    'trade_no'        => $request->input('trade_no'),
+                    'subject'         => $request->input('subject'),
+                    'amount'          => $request->input('amount'),
+                    'items'           => serialize($request->input('items')),
+                    'returnUrl'       => $request->input('returnUrl'),
+                    'notifyUrl'       => $request->input('notifyUrl'),
                 ]);
 
                 $order->items = unserialize($order->items);
@@ -112,31 +97,75 @@ class ApiController extends Controller
         }
     }
 
-    public function getOrder(Request $request, $id)
+    public function show(Request $request, $id)
     {
+        $this->validate($request, [
+            'timestamp' => 'required',
+            'nonce'     => 'required',
+            'sign'      => 'required',
+        ]);
+
         $order = Order::findOrFail($id);
+        $merch = Merchandiser::findOrFail($order->merchandiser_id);
 
-        $data = $request->all();
-
-        $merch = Merchandiser::findOrFail($order['merchandiser_id']);
-
-        if ($this->verify($data, $merch['pubkey'])) {
+        if ($this->verify($request->all(), $merch->pubkey)) {
             return $this->jsonFormat($order);
         } else {
             return $this->jsonFormat(null, 'Signature Invalid or timestamp expired', '403');
         }
     }
 
-    public function completeOrder(Request $request, $id)
+    public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            'subject'   => 'max:255',
+            'amount'    => 'numeric',
+            'timestamp' => 'required',
+            'nonce'     => 'required',
+            'sign'      => 'required',
+            'items'     => 'array',
+        ]);
+
         $order = Order::findOrFail($id);
+        $merch = Merchandiser::where('status', 'alive')->findOrFail($order->merchandiser_id);
 
-        $data = $request->all();
+        if ($this->verify($request->all(), $merch->pubkey)) {
+            if ($order->status == 'pending') {
+                if ($request->has('subject')) {
+                    $order->subject = $request->input('subject');
+                }
+                if ($request->has('amount')) {
+                    $order->amount = $request->input('amount');
+                }
+                if ($request->has('items')) {
+                    $order->items = serialize($request->input('items'));
+                }
+                
+                $order->save();
 
-        $merch = Merchandiser::findOrFail($order['merchandiser_id']);
+                $order->items = unserialize($order->items);
 
-        if (!empty($data['trade_no']) && $data['trade_no'] === $order->trade_no) {
-            if ($this->verify($data, $merch['pubkey'])) {
+                return $this->jsonFormat($order);
+            }
+        } else {
+            return $this->jsonFormat(null, 'Signature Invalid or timestamp expired', '403');
+        }
+    }
+
+    public function complete(Request $request, $id)
+    {
+        $this->validate($request, [
+            'trade_no'  => 'required|exists:orders,trade_no',
+            'timestamp' => 'required',
+            'nonce'     => 'required',
+            'sign'      => 'required',
+        ]);
+
+        $order = Order::findOrFail($id);
+        $merch = Merchandiser::findOrFail($order->merchandiser_id);
+
+        if ($request->input('trade_no') === $order->trade_no) {
+            if ($this->verify($request->all(), $merch->pubkey)) {
                 if ($order->status === 'processing') {
                     $order->status = 'done';
                     $order->save();
@@ -151,16 +180,20 @@ class ApiController extends Controller
         }
     }
 
-    public function removeOrder(Request $request, $id)
+    public function destroy(Request $request, $id)
     {
+        $this->validate($request, [
+            'trade_no'  => 'required|exists:orders,trade_no',
+            'timestamp' => 'required',
+            'nonce'     => 'required',
+            'sign'      => 'required',
+        ]);
+
         $order = Order::findOrFail($id);
+        $merch = Merchandiser::findOrFail($order->merchandiser_id);
 
-        $data = $request->all();
-
-        $merch = Merchandiser::findOrFail($order['merchandiser_id']);
-
-        if (!empty($data['trade_no']) && $data['trade_no'] === $order->trade_no) {
-            if ($this->verify($data, $merch['pubkey'])) {
+        if ($request->input('trade_no') === $order->trade_no) {
+            if ($this->verify($request->all(), $merch->pubkey)) {
                 if (in_array($order->status, ['refunded', 'cancelled'])) {
                     $order->delete();
 
